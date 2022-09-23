@@ -7,7 +7,7 @@ use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Http\Exceptions\HttpResponseException;
 use Illuminate\Http\JsonResponse;
 
-class UpdateProductRequest extends FormRequest
+class UpdateCategoryRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -27,11 +27,7 @@ class UpdateProductRequest extends FormRequest
     public function rules()
     {
         return [
-            'category_no' => 'numeric',
-            'name'        => 'string',
-            'description' => 'string',
-            'price'       => 'numeric',
-            'image_path'  => 'nullable',
+            'category' => 'string'
         ];
     }
 

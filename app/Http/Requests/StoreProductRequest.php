@@ -49,7 +49,8 @@ class StoreProductRequest extends FormRequest
                     'result' => false,
                     'error' => $validator->getMessageBag(),
                 ],
-                400)
+                400
+            )
         );
     }
 }

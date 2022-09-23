@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\BackendException;
 use App\Models\CategoryModel;
 use Illuminate\Database\Eloquent\Collection;
 
@@ -23,7 +24,7 @@ class CategoryRepository
      * @param int|null $iLimit
      * @return CategoryModel[]|Collection
      */
-    public function getAllCategory(?bool $bPaginate = false, ?int $iPage = 1, ?int $iLimit = 10)
+    public function getAllCategory(?bool $bPaginate = false, ?int $iPage = 1, ?int $iLimit = 10) //: CategoryModel|Collection
     {
         if ($bPaginate === true) {
             $aData = $this->oModel->paginate($iLimit, '*', 'page', $iPage);
@@ -31,6 +32,7 @@ class CategoryRepository
                 'paginate' => true,
                 'limit'    => $iLimit,
             ];
+
             return $aData->withPath(config('app.url') . '/api/product?' . http_build_query($aUrlParams));
         }
 
@@ -39,18 +41,18 @@ class CategoryRepository
 
     /**
      * @param int $iCategoryId
-     * @return mixed
+     * @return ?CategoryModel
      */
-    public function getCategory(int $iCategoryId)
+    public function getCategory(int $iCategoryId): ?CategoryModel
     {
         return $this->oModel->find($iCategoryId);
     }
 
     /**
      * @param array $aRequest
-     * @return mixed
+     * @return CategoryModel
      */
-    public function storeCategory(array $aRequest)
+    public function storeCategory(array $aRequest): CategoryModel
     {
         return $this->oModel->create($aRequest);
     }
@@ -59,18 +61,30 @@ class CategoryRepository
      * @param array $aRequest
      * @param int $iCategoryId
      * @return mixed
+     * @throws BackendException
      */
-    public function updateCategory(array $aRequest, int $iCategoryId)
+    public function updateCategory(array $aRequest, int $iCategoryId): bool
     {
-        return $this->oModel->where(['id' => $iCategoryId])->update($aRequest);
+        $aData = $this->oModel->find($iCategoryId);
+        if ($aData === null) {
+            throw new BackendException('Category not found', 404);
+        }
+
+        return $aData->update($aRequest);
     }
 
     /**
      * @param int $iCategoryId
      * @return mixed
+     * @throws BackendException
      */
-    public function deleteCategory(int $iCategoryId)
+    public function deleteCategory(int $iCategoryId): bool
     {
-        return $this->oModel->find($iCategoryId)->delete();
+        $aData = $this->oModel->find($iCategoryId);
+        if ($aData === null) {
+            throw new BackendException('Category not found', 404);
+        }
+
+        return $aData->delete($iCategoryId);
     }
 }

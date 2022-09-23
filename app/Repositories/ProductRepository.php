@@ -4,7 +4,6 @@ namespace App\Repositories;
 
 use App\Exceptions\BackendException;
 use App\Models\ProductModel;
-use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductRepository
@@ -28,7 +27,7 @@ class ProductRepository
      * @param ?int $iLimit
      * @return ProductModel[]|Collection
      */
-    public function getAllProduct(?bool $bPaginate = false, ?int $iPage = 1, ?int $iLimit = 10)
+    public function getAllProduct(?bool $bPaginate = false, ?int $iPage = 1, ?int $iLimit = 10) //: ProductModel|Collection
     {
         if ($bPaginate === true) {
             $aData = $this->oModel->paginate($iLimit, '*', 'page', $iPage);
@@ -43,18 +42,18 @@ class ProductRepository
 
     /**
      * @param int $iProductId
-     * @return mixed
+     * @return ?ProductModel
      */
-    public function getProduct(int $iProductId)
+    public function getProduct(int $iProductId): ?ProductModel
     {
         return $this->oModel->find($iProductId);
     }
 
     /**
      * @param array $aRequest
-     * @return mixed
+     * @return ProductModel
      */
-    public function storeProduct(array $aRequest)
+    public function storeProduct(array $aRequest): ProductModel
     {
         return $this->oModel->create($aRequest);
     }
@@ -62,10 +61,10 @@ class ProductRepository
     /**
      * @param array $aRequest
      * @param int $iProductId
-     * @return mixed
-     * @throws Exception
+     * @return bool
+     * @throws BackendException
      */
-    public function updateProduct(array $aRequest, int $iProductId)
+    public function updateProduct(array $aRequest, int $iProductId): bool
     {
         $aData = $this->oModel->find($iProductId);
         if ($aData === null) {
@@ -77,10 +76,10 @@ class ProductRepository
 
     /**
      * @param int $iProductId
-     * @return mixed
+     * @return bool
      * @throws BackendException
      */
-    public function deleteProduct(int $iProductId)
+    public function deleteProduct(int $iProductId): bool
     {
         $aData = $this->oModel->find($iProductId);
         if ($aData === null) {
