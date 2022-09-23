@@ -33,8 +33,9 @@ class ProductControllerTest extends TestCase
         $oSeeder->call(CategorySeeder::class);
         $oSeeder->call(ProductSeeder::class);
         $oResult = $this->get($this->sProductApiUrl);
-        $oResult->assertSuccessful();
+        $oResult->assertOk();
         $this->assertNotEmpty($oResult->json('data'));
+        $this->assertArrayHasKey('name', $oResult->json('data')[0]);
     }
 
     public function test_controller_get_all_products_must_return_result_true_with_pagination_when_product_table_is_not_empty()
@@ -48,9 +49,19 @@ class ProductControllerTest extends TestCase
             'limit'      => 5
         ]);
         $oResult = $this->get($this->sProductApiUrl . '?' . $sParams);
-        $oResult->assertSuccessful();
+        $oResult->assertOk();
         $this->assertNotEmpty($oResult->json('data'));
         $this->assertArrayHasKey('next_page_url', $oResult->json('data'));
+        $this->assertNotNull($oResult->json('data')['next_page_url']);
+    }
+
+    public function test_controller_get_one_product_must_return_result_false_when_product_is_not_in_database()
+    {
+        $oSeeder = new DatabaseSeeder();
+        $oSeeder->call(CategorySeeder::class);
+        $oResult = $this->get($this->sProductApiUrl . '/1');
+        $oResult->assertOk();
+        $this->assertNotEmpty($oResult->json('error'));
     }
 
     public function test_controller_get_one_product_must_return_result_true_when_product_table_is_not_empty()
@@ -59,7 +70,7 @@ class ProductControllerTest extends TestCase
         $oSeeder->call(CategorySeeder::class);
         $oSeeder->call(ProductSeeder::class);
         $oResult = $this->get($this->sProductApiUrl . '/1');
-        $oResult->assertSuccessful();
+        $oResult->assertOk();
         $this->assertNotEmpty($oResult->json('data'));
     }
 
@@ -70,10 +81,10 @@ class ProductControllerTest extends TestCase
         $oSeeder->call(ProductSeeder::class);
         $oResult = $this->post($this->sProductApiUrl);
         $this->assertEquals(400, $oResult->getStatusCode());
-        self::assertArrayHasKey('name', $oResult->json('error'));
-        self::assertArrayHasKey('description', $oResult->json('error'));
-        self::assertArrayHasKey('price', $oResult->json('error'));
-        self::assertArrayHasKey('category_no', $oResult->json('error'));
+        $this->assertArrayHasKey('name', $oResult->json('error'));
+        $this->assertArrayHasKey('description', $oResult->json('error'));
+        $this->assertArrayHasKey('price', $oResult->json('error'));
+        $this->assertArrayHasKey('category_no', $oResult->json('error'));
     }
 
     public function test_controller_add_product_must_return_result_false_when_category_no_parameter_is_empty()
@@ -87,8 +98,8 @@ class ProductControllerTest extends TestCase
             'price'       => 10.15
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
-        self::assertArrayHasKey('category_no', $oResult->json('error'));
-        self::assertCount(1, $oResult->json('error'));
+        $this->assertArrayHasKey('category_no', $oResult->json('error'));
+        $this->assertCount(1, $oResult->json('error'));
     }
 
     public function test_controller_add_product_must_return_result_false_when_price_parameter_is_empty()
@@ -102,8 +113,8 @@ class ProductControllerTest extends TestCase
             'description' => 'This is a description',
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
-        self::assertArrayHasKey('price', $oResult->json('error'));
-        self::assertCount(1, $oResult->json('error'));
+        $this->assertArrayHasKey('price', $oResult->json('error'));
+        $this->assertCount(1, $oResult->json('error'));
     }
 
     public function test_controller_add_product_must_return_result_false_when_name_parameter_is_empty()
@@ -117,8 +128,8 @@ class ProductControllerTest extends TestCase
             'description' => 'This is a description',
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
-        self::assertArrayHasKey('name', $oResult->json('error'));
-        self::assertCount(1, $oResult->json('error'));
+        $this->assertArrayHasKey('name', $oResult->json('error'));
+        $this->assertCount(1, $oResult->json('error'));
     }
 
     public function test_controller_add_product_must_return_result_false_when_description_parameter_is_empty()
@@ -132,8 +143,8 @@ class ProductControllerTest extends TestCase
             'name'        => 'Product 1',
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
-        self::assertArrayHasKey('description', $oResult->json('error'));
-        self::assertNotEmpty($oResult->json('error'));
+        $this->assertArrayHasKey('description', $oResult->json('error'));
+        $this->assertNotEmpty($oResult->json('error'));
     }
 
     public function test_controller_add_product_must_return_result_true_when_product_added_to_database()
@@ -148,10 +159,10 @@ class ProductControllerTest extends TestCase
             'description' => 'This is a description',
         ]);
 
-        self::assertEquals(200, $oResult->getStatusCode());
-        self::assertNotEmpty($oResult->json('data'));
-        self::assertNull($oResult->json('error'));
-        self::assertNotNull((new ProductModel())->find($oResult->json('data')['id']));
+        $this->assertEquals(200, $oResult->getStatusCode());
+        $this->assertNotEmpty($oResult->json('data'));
+        $this->assertNull($oResult->json('error'));
+        $this->assertNotNull((new ProductModel())->find($oResult->json('data')['id']));
     }
 
     public function test_controller_update_product_must_return_result_false_when_product_is_not_existing()
@@ -170,8 +181,8 @@ class ProductControllerTest extends TestCase
             'category_no' => 'Test',
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
-        self::assertArrayHasKey('category_no', $oResult->json('error'));
-        self::assertCount(1, $oResult->json('error'));
+        $this->assertArrayHasKey('category_no', $oResult->json('error'));
+        $this->assertCount(1, $oResult->json('error'));
     }
 
     public function test_controller_update_product_must_return_result_false_when_price_parameter_is_invalid()
@@ -184,8 +195,8 @@ class ProductControllerTest extends TestCase
         ]);
 
         $this->assertEquals(400, $oResult->getStatusCode());
-        self::assertArrayHasKey('price', $oResult->json('error'));
-        self::assertCount(1, $oResult->json('error'));
+        $this->assertArrayHasKey('price', $oResult->json('error'));
+        $this->assertCount(1, $oResult->json('error'));
     }
 
     public function test_controller_update_product_must_return_result_false_when_name_parameter_is_invalid()
@@ -197,8 +208,8 @@ class ProductControllerTest extends TestCase
             'name' => 1
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
-        self::assertArrayHasKey('name', $oResult->json('error'));
-        self::assertCount(1, $oResult->json('error'));
+        $this->assertArrayHasKey('name', $oResult->json('error'));
+        $this->assertCount(1, $oResult->json('error'));
     }
 
     public function test_controller_update_product_must_return_result_false_when_description_parameter_is_invalid()
@@ -210,8 +221,8 @@ class ProductControllerTest extends TestCase
             'description' => 1,
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
-        self::assertArrayHasKey('description', $oResult->json('error'));
-        self::assertNotEmpty($oResult->json('error'));
+        $this->assertArrayHasKey('description', $oResult->json('error'));
+        $this->assertNotEmpty($oResult->json('error'));
     }
 
     public function test_controller_update_product_must_return_result_true_when_product_updated_in_database()
@@ -223,9 +234,9 @@ class ProductControllerTest extends TestCase
         $oResult = $this->put($this->sProductApiUrl . '/1', [
             'description' => 'Update Description'
         ]);
-        $oResult->assertSuccessful();
+        $oResult->assertOk();
         $this->assertNotEmpty($oResult->json('data'));
-        self::assertEquals('Update Description', $oResult->json('data')['description']);
+        $this->assertEquals('Update Description', $oResult->json('data')['description']);
     }
 
 
@@ -245,7 +256,7 @@ class ProductControllerTest extends TestCase
         $iCurrentProductCount = $oModel->all()->count();
         $oResult = $this->delete($this->sProductApiUrl . '/1');
         $iAfterDeleteProductCount = $oModel->all()->count();
-        $oResult->assertSuccessful();
+        $oResult->assertOk();
         $this->assertNotEmpty($oResult->json('data'));
         $this->assertEquals($iCurrentProductCount - 1, $iAfterDeleteProductCount);
     }

@@ -32,8 +32,8 @@ class CategoryRepositoryTest extends TestCase
         ]);
 
         $oResult = $oRepository->getAllCategory();
-        self::assertTrue($oResult instanceof Collection);
-        self::assertCount(3, $oModel->all());
+        $this->assertTrue($oResult instanceof Collection);
+        $this->assertCount(3, $oModel->all());
     }
 
     public function test_get_all_category_must_return_paginated_data()
@@ -52,8 +52,8 @@ class CategoryRepositoryTest extends TestCase
         ]);
 
         $oResult = $oRepository->getAllCategory(true, 1, 2);
-        self::assertTrue($oResult instanceof LengthAwarePaginator);
-        self::assertTrue($oResult->toArray()['next_page_url'] !== null);
+        $this->assertTrue($oResult instanceof LengthAwarePaginator);
+        $this->assertTrue($oResult->toArray()['next_page_url'] !== null);
     }
 
     public function test_get_category_must_return_one_data()
@@ -73,10 +73,23 @@ class CategoryRepositoryTest extends TestCase
 
         $oResult = $oRepository->getCategory(1);
 
-        self::assertTrue($oResult instanceof CategoryModel);
-        self::assertEquals('Category Test 1', $oRepository->getCategory(1)->category);
-        self::assertEquals('Category Test 2', $oRepository->getCategory(2)->category);
-        self::assertEquals('Category Test 3', $oRepository->getCategory(3)->category);
+        $this->assertTrue($oResult instanceof CategoryModel);
+        $this->assertEquals('Category Test 1', $oRepository->getCategory(1)->category);
+        $this->assertEquals('Category Test 2', $oRepository->getCategory(2)->category);
+        $this->assertEquals('Category Test 3', $oRepository->getCategory(3)->category);
+    }
+
+    public function test_store_category_must_return_insert_data()
+    {
+        $oModel = new CategoryModel();
+        $oRepository = new CategoryRepository($oModel);
+
+        $oResult = $oRepository->storeCategory([
+            'category' => 'Category Test 1'
+        ]);
+
+        $this->assertTrue($oResult instanceof CategoryModel);
+        $this->assertCount(1, $oModel->all());
     }
 
     public function test_category_update_must_reflect_in_database()
@@ -89,7 +102,7 @@ class CategoryRepositoryTest extends TestCase
         ]);
 
         $oRepository->updateCategory(['category' => 'Category Updated'], 1);
-        self::assertEquals('Category Updated', $oModel->find(1)->category);
+        $this->assertEquals('Category Updated', $oModel->find(1)->category);
     }
 
     public function test_category_delete_must_reflect_in_database()
@@ -103,6 +116,6 @@ class CategoryRepositoryTest extends TestCase
 
         $oRepository->deleteCategory(1);
 
-        self::assertTrue($oModel->all()->isEmpty());
+        $this->assertTrue($oModel->all()->isEmpty());
     }
 }
