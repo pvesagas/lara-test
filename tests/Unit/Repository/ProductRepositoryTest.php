@@ -1,7 +1,8 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Repository;
 
+use App\Exceptions\BackendException;
 use App\Models\CategoryModel;
 use App\Models\ProductModel;
 use App\Repositories\ProductRepository;
@@ -39,7 +40,7 @@ class ProductRepositoryTest extends TestCase
         $oResult = $oProductRepository->getAllProduct();
 
         self::assertTrue($oResult instanceof Collection);
-        self::assertEquals( 2, $oResult->count());
+        self::assertCount( 2, $oResult);
     }
 
     public function test_get_all_product_must_return_all_product_in_database_with_pagination_and_limit_2()
@@ -149,6 +150,31 @@ class ProductRepositoryTest extends TestCase
         self::assertEquals($aUpdateRequest['name'], $oProductModel->find(1)->name);
         self::assertEquals($aUpdateRequest['description'], $oProductModel->find(1)->description);
         self::assertEquals($aUpdateRequest['price'], $oProductModel->find(1)->price);
+    }
+
+    public function test_update_product_must_throw_exception_when_product_is_not_found_in_database()
+    {
+        $this->createCategory();
+        $oProductModel = new ProductModel();
+        $oProductRepository = new ProductRepository($oProductModel);
+        $oProductModel->create([
+            'category_no' => 1,
+            'name'        => 'Product 12',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+
+        $aUpdateRequest = [
+            'category_no' => 1,
+            'name'        => 'Product 13',
+            'description' => 'This is an updated description',
+            'price'       => 123
+        ];
+
+        $this->expectException(BackendException::class);
+        $this->expectExceptionCode(404);
+        $oProductRepository->updateProduct($aUpdateRequest, 5);
+
     }
 
     public function test_delete_product_must_reflect_in_database()

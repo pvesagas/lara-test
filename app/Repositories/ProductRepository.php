@@ -2,7 +2,9 @@
 
 namespace App\Repositories;
 
+use App\Exceptions\BackendException;
 use App\Models\ProductModel;
+use Exception;
 use Illuminate\Database\Eloquent\Collection;
 
 class ProductRepository
@@ -61,19 +63,31 @@ class ProductRepository
      * @param array $aRequest
      * @param int $iProductId
      * @return mixed
+     * @throws Exception
      */
     public function updateProduct(array $aRequest, int $iProductId)
     {
-        return $this->oModel->where(['id' => $iProductId])->update($aRequest);
+        $aData = $this->oModel->find($iProductId);
+        if ($aData === null) {
+            throw new BackendException('Product not found', 404);
+        }
+
+        return $aData->update($aRequest);
     }
 
     /**
      * @param int $iProductId
      * @return mixed
+     * @throws BackendException
      */
     public function deleteProduct(int $iProductId)
     {
-        return $this->oModel->find($iProductId)->delete();
+        $aData = $this->oModel->find($iProductId);
+        if ($aData === null) {
+            throw new BackendException('Product not found', 404);
+        }
+
+        return $aData->delete();
     }
 
 }

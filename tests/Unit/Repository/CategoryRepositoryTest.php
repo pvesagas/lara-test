@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Unit;
+namespace Tests\Unit\Repository;
 
 use App\Models\CategoryModel;
 use App\Repositories\CategoryRepository;
@@ -33,7 +33,7 @@ class CategoryRepositoryTest extends TestCase
 
         $oResult = $oRepository->getAllCategory();
         self::assertTrue($oResult instanceof Collection);
-        self::assertEquals(3, $oModel->all()->count());
+        self::assertCount(3, $oModel->all());
     }
 
     public function test_get_all_category_must_return_paginated_data()
