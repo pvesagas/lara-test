@@ -55,6 +55,121 @@ class ProductControllerTest extends TestCase
         $this->assertNotNull($oResult->json('data')['next_page_url']);
     }
 
+    public function test_controller_get_all_products_must_return_two_products_containing_category_2_when_category_parameter_is_present()
+    {
+        $oSeeder = new DatabaseSeeder();
+        $oSeeder->call(CategorySeeder::class);
+        $oProductModel = new ProductModel();
+        $oProductModel->create([
+            'category_no' => 1,
+            'name'        => 'Product 1',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+        $oProductModel->create([
+            'category_no' => 2,
+            'name'        => 'Product 2',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+        $oProductModel->create([
+            'category_no' => 2,
+            'name'        => 'Item 1',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+        $sParams = http_build_query([
+            'paginate' => true,
+            'limit'    => 10,
+            'category' => 2
+        ]);
+
+        $oResult = $this->get($this->sProductApiUrl . '?' . $sParams);
+
+        $oResult->assertOk();
+        $this->assertNotEmpty($oResult->json('data'));
+        $this->assertArrayHasKey('next_page_url', $oResult->json('data'));
+        $this->assertNull($oResult->json('data')['next_page_url']);
+        $this->assertCount(2, $oResult->json('data')['data']);
+    }
+
+    public function test_controller_get_all_products_must_return_two_products_containing_the_value_of_search_parameter()
+    {
+        $oSeeder = new DatabaseSeeder();
+        $oSeeder->call(CategorySeeder::class);
+        $oProductModel = new ProductModel();
+        $oProductModel->create([
+            'category_no' => 1,
+            'name'        => 'Product 1',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+        $oProductModel->create([
+            'category_no' => 2,
+            'name'        => 'Product 2',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+        $oProductModel->create([
+            'category_no' => 2,
+            'name'        => 'Item 1',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+        $sParams = http_build_query([
+            'paginate' => true,
+            'limit'    => 10,
+            'search'   => 'Product'
+        ]);
+
+        $oResult = $this->get($this->sProductApiUrl . '?' . $sParams);
+
+        $oResult->assertOk();
+        $this->assertNotEmpty($oResult->json('data'));
+        $this->assertArrayHasKey('next_page_url', $oResult->json('data'));
+        $this->assertNull($oResult->json('data')['next_page_url']);
+        $this->assertCount(2, $oResult->json('data')['data']);
+    }
+
+    public function test_controller_get_all_products_must_return_one_product_containing_the_value_of_search_parameter_and_category()
+    {
+        $oSeeder = new DatabaseSeeder();
+        $oSeeder->call(CategorySeeder::class);
+        $oProductModel = new ProductModel();
+        $oProductModel->create([
+            'category_no' => 1,
+            'name'        => 'Product 1',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+        $oProductModel->create([
+            'category_no' => 2,
+            'name'        => 'Product',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+        $oProductModel->create([
+            'category_no' => 2,
+            'name'        => 'Item 1',
+            'description' => 'This is a description',
+            'price'       => 10.15
+        ]);
+        $sParams = http_build_query([
+            'paginate' => true,
+            'limit'    => 10,
+            'category' => 2,
+            'search'   => 'Product'
+        ]);
+
+        $oResult = $this->get($this->sProductApiUrl . '?' . $sParams);
+
+        $oResult->assertOk();
+        $this->assertNotEmpty($oResult->json('data'));
+        $this->assertArrayHasKey('next_page_url', $oResult->json('data'));
+        $this->assertNull($oResult->json('data')['next_page_url']);
+        $this->assertCount(1, $oResult->json('data')['data']);
+    }
+
     public function test_controller_get_one_product_must_return_result_false_when_product_is_not_in_database()
     {
         $oSeeder = new DatabaseSeeder();

@@ -15,19 +15,12 @@ class CategorySeeder extends Seeder
      */
     public function run()
     {
-        DB::table('category')->insert([
-            [
-                'category' => 'Category 1'
-            ],
-            [
-                'category' => 'Category 2'
-            ],
-            [
-                'category' => 'Category 3'
-            ],
-            [
-                'category' => 'Category 4'
-            ],
-        ]);
+        foreach (range(1,12) as $iNumber) {
+            DB::table('category')->insert([
+                [
+                    'category' => 'Category ' . $iNumber
+                ]
+            ]);
+        }
     }
 }

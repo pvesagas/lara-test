@@ -20,4 +20,13 @@ class ProductModel extends Model
         'description',
         'image_path'
     ];
+
+    protected $appends = [
+        'display_price'
+    ];
+
+    public function getDisplayPriceAttribute($value): string
+    {
+        return number_format($this->price, 2);
+    }
 }

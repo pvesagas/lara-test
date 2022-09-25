@@ -33,6 +33,8 @@ class ProductController extends Controller
             $oRequest->input('paginate'),
             $oRequest->input('page'),
             $oRequest->input('limit'),
+            $oRequest->input('category'),
+            $oRequest->input('search'),
         );
 
         if ($oProducts->isEmpty() === true) {
@@ -44,7 +46,7 @@ class ProductController extends Controller
         }
         return response()->json([
             'result' => true,
-            'data'   => $oProducts
+            'data'   => $oProducts,
         ]);
     }
 

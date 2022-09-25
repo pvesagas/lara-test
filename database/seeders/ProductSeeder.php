@@ -2,11 +2,13 @@
 
 namespace Database\Seeders;
 
+use Faker\Factory as Faker;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
 class ProductSeeder extends Seeder
 {
+
     /**
      * Run the database seeds.
      *
@@ -14,73 +16,17 @@ class ProductSeeder extends Seeder
      */
     public function run()
     {
-        DB::table('product')->insert([
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 1',
-                'description' => 'This is a description',
-                'price'       => 10.15
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 2',
-                'description' => 'This is a description',
-                'price'       => 10.15
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 3',
-                'description' => 'This is a description',
-                'price'       => 10.15
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 4',
-                'description' => 'This is a description',
-                'price'       => 10.15
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 5',
-                'description' => 'This is a description',
-                'price'       => 10.15
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 6',
-                'description' => 'This is a description',
-                'price'       => 10.15
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 7',
-                'description' => 'This is a description',
-                'price'       => 10.15
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 8',
-                'description' => 'This is a description',
-                'price'       => 10.15
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 9',
-                'description' => 'This is a description',
-                'price'       => 100
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 10',
-                'description' => 'This is a description',
-                'price'       => 15
-            ],
-            [
-                'category_no' => rand(1,4),
-                'name'        => 'Product 11',
-                'description' => 'This is a description',
-                'price'       => 10
-            ]
-        ]);
+
+        $faker = Faker::create();
+        foreach (range(1, 1000) as $iNumber) {
+            DB::table('product')->insert([
+                [
+                    'category_no' => rand(1,12),
+                    'name'        => 'Product ' . $iNumber,
+                    'description' => $faker->words(5, true),
+                    'price'       => $faker->randomFloat(2, 100, 1)
+                ]
+            ]);
+        }
     }
 }

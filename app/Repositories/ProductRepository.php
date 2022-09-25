@@ -22,22 +22,37 @@ class ProductRepository
     }
 
     /**
-     * @param ?bool $bPaginate
-     * @param ?int $iPage
-     * @param ?int $iLimit
+     * @param bool|null $bPaginate
+     * @param int|null $iPage
+     * @param int|null $iLimit
+     * @param int|null $iCategory
+     * @param string|null $sSearch
      * @return ProductModel[]|Collection
      */
-    public function getAllProduct(?bool $bPaginate = false, ?int $iPage = 1, ?int $iLimit = 10) //: ProductModel|Collection
+    public function getAllProduct(?bool $bPaginate = false, ?int $iPage = 1, ?int $iLimit = 10, ?int $iCategory = null, ?string $sSearch = null) //: ProductModel|Collection
     {
+        $aData = $this->oModel;
+        $aUrlParams = [
+            'limit' => $iLimit,
+        ];
+        if (empty($iCategory) === false) {
+            $aData = $aData->where('category_no', '=', $iCategory);
+            $aUrlParams['paginate'] = true;
+        }
+
+        if (empty($sSearch) === false) {
+            $aData = $aData->where('name', 'LIKE', '%' . $sSearch . '%')
+                ->orWhere('description', 'LIKE', '%' . $sSearch . '%')
+                ->orWhere('price', 'LIKE', '%' . $sSearch . '%');
+            $aUrlParams['search'] = $sSearch;
+        }
+
         if ($bPaginate === true) {
-            $aData = $this->oModel->paginate($iLimit, '*', 'page', $iPage);
-            $aUrlParams = [
-                'paginate' => true,
-                'limit'    => $iLimit,
-            ];
+            $aData = $aData->paginate($iLimit, '*', 'page', $iPage);
+            $aUrlParams['paginate'] = true;
             return $aData->withPath(config('app.url') . '/api/product?' . http_build_query($aUrlParams));
         }
-        return $this->oModel->all();
+        return $aData->get();
     }
 
     /**
