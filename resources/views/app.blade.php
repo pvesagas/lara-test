@@ -9,8 +9,8 @@
         <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
     </head>
-    <body class="antialiased">
-        <div id="app">
+    <body class="antialiased bg-gray-50 h-[100%]">
+        <div id="app" class="bg-gray-50 ">
             <store-container></store-container>
         </div>
         <script src="{{ asset('js/app.js') }}" defer></script>
