@@ -52,7 +52,12 @@
                     <span class="font-semibold text-sm uppercase">Items <span v-text="getTotalItemCount"></span></span>
                     <span class="font-semibold text-sm">$ <span v-text="getTotalItemCost"></span></span>
                 </div>
-                <button @click="checkout" class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
+                <div v-if="checkoutLoading === true">
+                    <div class="flex justify-center items-center flex-1 my-10">
+                        <div class="animate-spin radial-progress text-blue-200" style="--value:70; --size:12rem; --thickness: 2rem;"></div>
+                    </div>
+                </div>
+                <button v-else @click="checkout" class="bg-indigo-500 rounded font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
             </div>
 
         </div>
@@ -65,6 +70,7 @@ export default {
     data() {
        return {
            cart: {},
+           checkoutLoading: false
        }
     },
     computed: {
@@ -98,6 +104,7 @@ export default {
                 });
         },
         checkout() {
+            this.checkoutLoading = true;
             axios.post('/checkout', {total: this.getTotalItemCost})
                 .then(oResponse => {
                     let sUrl = oResponse.data.data;
