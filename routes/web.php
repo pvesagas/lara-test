@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -29,6 +30,7 @@ Route::group(['prefix' => 'cart'], function() {
    Route::get('/', function () {
        return view('cart');
    });
+   Route::get('/success', [CartController::class, 'displaySuccess']);
    Route::get('/items', [CartController::class, 'getCart']);
    Route::post('/add', [CartController::class, 'addToCart']);
    Route::put('/', [CartController::class, 'updateCart']);
@@ -37,3 +39,4 @@ Route::group(['prefix' => 'cart'], function() {
 });
 
 Route::post('imageUpload', [FileUploadController::class, 'uploadImage']);
+Route::post('checkout', [PaymentController::class, 'createCheckout']);

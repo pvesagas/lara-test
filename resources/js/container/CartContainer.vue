@@ -52,7 +52,7 @@
                     <span class="font-semibold text-sm uppercase">Items <span v-text="getTotalItemCount"></span></span>
                     <span class="font-semibold text-sm">$ <span v-text="getTotalItemCost"></span></span>
                 </div>
-                <button class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
+                <button @click="checkout" class="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full">Checkout</button>
             </div>
 
         </div>
@@ -92,6 +92,16 @@ export default {
             axios.get('/cart/items')
                 .then(oResponse => {
                     this.cart = oResponse.data.data;
+                })
+                .catch(oError => {
+
+                });
+        },
+        checkout() {
+            axios.post('/checkout', {total: this.getTotalItemCost})
+                .then(oResponse => {
+                    let sUrl = oResponse.data.data;
+                    window.location.href = sUrl;
                 })
                 .catch(oError => {
 

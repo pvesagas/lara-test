@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Repositories\ProductRepository;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Contracts\View\Factory;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Session;
+use Illuminate\View\View;
 
 class CartController extends Controller
 {
@@ -73,6 +76,9 @@ class CartController extends Controller
         ]);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function updateCart()
     {
         $aCart = Session::get('cart');
@@ -85,6 +91,9 @@ class CartController extends Controller
         ]);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function removeCartItem()
     {
         $aCart = Session::get('cart');
@@ -97,6 +106,9 @@ class CartController extends Controller
         ]);
     }
 
+    /**
+     * @return JsonResponse
+     */
     public function clearCart()
     {
         Session::forget('cart');
@@ -105,4 +117,12 @@ class CartController extends Controller
         ]);
     }
 
+    /**
+     * @return Application|Factory|\Illuminate\Contracts\View\View
+     */
+    public function displaySuccess(): View
+    {
+        Session::forget('cart');
+        return view('success');
+    }
 }
