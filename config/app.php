@@ -123,6 +123,16 @@ return [
 
     'cipher' => 'AES-256-CBC',
 
+
+    /*
+   |--------------------------------------------------------------------------
+   | Stripe API KEY
+   |--------------------------------------------------------------------------
+   */
+    'stripe_public_key' => env('STRIPE_PRIVATE_KEY', 'pk_test_51LmprJK7RsE4j243vISzwifQj1WmgG5miGxksorvSkv5ns8RXRNmUYX6mAytGkeBlI8Ab7U3ve5wAMyteZ14Sxni00Eulpr5sI'),
+
+    'stripe_private_key' => env('STRIPE_PRIVATE_KEY', 'sk_test_51LmprJK7RsE4j243LCYjoAgqTxbo67lI6XamP2T9UrMRpnUqbbA5DC171eIF4E2HQmqrFTpqhvrehbFjOuMYAKCK00fMX0Zgh4'),
+
     /*
     |--------------------------------------------------------------------------
     | Autoloaded Service Providers

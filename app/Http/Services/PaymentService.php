@@ -18,7 +18,7 @@ class PaymentService
      */
     public function __construct()
     {
-        $this->oStripe = new StripeClient(env('STRIPE_PRIVATE_KEY'));
+        $this->oStripe = new StripeClient(config('app.stripe_private_key'));
     }
 
     /**
