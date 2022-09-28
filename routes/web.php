@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\FileUploadController;
+use App\Http\Controllers\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +17,26 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+    return view('store');
 });
+
+Route::group(['prefix' => 'product'], function() {
+    Route::get('/', function () {
+        return view('product');
+    });
+});
+
+Route::group(['prefix' => 'cart'], function() {
+   Route::get('/', function () {
+       return view('cart');
+   });
+   Route::get('/success', [CartController::class, 'displaySuccess']);
+   Route::get('/items', [CartController::class, 'getCart']);
+   Route::post('/add', [CartController::class, 'addToCart']);
+   Route::put('/', [CartController::class, 'updateCart']);
+   Route::delete('/', [CartController::class, 'removeCartItem']);
+   Route::get('/clear', [CartController::class, 'clearCart']);
+});
+
+Route::post('imageUpload', [FileUploadController::class, 'uploadImage']);
+Route::post('checkout', [PaymentController::class, 'createCheckout']);
