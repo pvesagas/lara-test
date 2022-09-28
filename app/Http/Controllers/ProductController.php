@@ -79,7 +79,7 @@ class ProductController extends Controller
         try {
             return response()->json(
                 [
-                    'result' => false,
+                    'result' => true,
                     'data' => $this->oRepository->storeProduct($oRequest->validated()),
                 ]
             );

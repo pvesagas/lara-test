@@ -27,13 +27,11 @@ class ProductRepositoryTest extends TestCase
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 12',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 13',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
 
@@ -52,19 +50,16 @@ class ProductRepositoryTest extends TestCase
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 2',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 3',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
 
@@ -82,19 +77,16 @@ class ProductRepositoryTest extends TestCase
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductRepository->storeProduct([
             'category_no' => 2,
             'name'        => 'Product 2',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductRepository->storeProduct([
             'category_no' => 2,
             'name'        => 'Item 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
 
@@ -112,19 +104,16 @@ class ProductRepositoryTest extends TestCase
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductRepository->storeProduct([
             'category_no' => 2,
             'name'        => 'Product 2',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductRepository->storeProduct([
             'category_no' => 2,
             'name'        => 'Item 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
 
@@ -143,19 +132,16 @@ class ProductRepositoryTest extends TestCase
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 2',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Item 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
 
@@ -174,7 +160,6 @@ class ProductRepositoryTest extends TestCase
         $oProductRepository->storeProduct([
             'category_no' => 1,
             'name'        => 'Product 12',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
 
@@ -192,13 +177,11 @@ class ProductRepositoryTest extends TestCase
         $aProductOne = [
             'category_no' => 1,
             'name'        => 'Product 12',
-            'description' => 'This is a description',
             'price'       => 123
         ];
         $aProductTwo = [
             'category_no' => 1,
             'name'        => 'Product 13',
-            'description' => 'This is a different description',
             'price'       => 10.15
         ];
 
@@ -207,12 +190,10 @@ class ProductRepositoryTest extends TestCase
 
         $this->assertEquals($aProductOne['category_no'], $oProductRepository->getProduct(1)->category_no);
         $this->assertEquals($aProductOne['name'], $oProductRepository->getProduct(1)->name);
-        $this->assertEquals($aProductOne['description'], $oProductRepository->getProduct(1)->description);
         $this->assertEquals($aProductOne['price'], $oProductRepository->getProduct(1)->price);
 
         $this->assertEquals($aProductTwo['category_no'], $oProductRepository->getProduct(2)->category_no);
         $this->assertEquals($aProductTwo['name'], $oProductRepository->getProduct(2)->name);
-        $this->assertEquals($aProductTwo['description'], $oProductRepository->getProduct(2)->description);
         $this->assertEquals($aProductTwo['price'], $oProductRepository->getProduct(2)->price);
     }
 
@@ -224,14 +205,12 @@ class ProductRepositoryTest extends TestCase
         $oProductModel->create([
             'category_no' => 1,
             'name'        => 'Product 12',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
 
         $aUpdateRequest = [
             'category_no' => 1,
             'name'        => 'Product 13',
-            'description' => 'This is an updated description',
             'price'       => 123
         ];
 
@@ -239,7 +218,6 @@ class ProductRepositoryTest extends TestCase
 
         $this->assertEquals($aUpdateRequest['category_no'], $oProductModel->find(1)->category_no);
         $this->assertEquals($aUpdateRequest['name'], $oProductModel->find(1)->name);
-        $this->assertEquals($aUpdateRequest['description'], $oProductModel->find(1)->description);
         $this->assertEquals($aUpdateRequest['price'], $oProductModel->find(1)->price);
     }
 
@@ -251,14 +229,12 @@ class ProductRepositoryTest extends TestCase
         $oProductModel->create([
             'category_no' => 1,
             'name'        => 'Product 12',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
 
         $aUpdateRequest = [
             'category_no' => 1,
             'name'        => 'Product 13',
-            'description' => 'This is an updated description',
             'price'       => 123
         ];
 
@@ -276,7 +252,6 @@ class ProductRepositoryTest extends TestCase
         $oProductModel->create([
             'category_no' => 1,
             'name'        => 'Product 12',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
 

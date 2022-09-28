@@ -42,7 +42,6 @@ class ProductRepository
 
         if (empty($sSearch) === false) {
             $aData = $aData->where('name', 'LIKE', '%' . $sSearch . '%')
-                ->orWhere('description', 'LIKE', '%' . $sSearch . '%')
                 ->orWhere('price', 'LIKE', '%' . $sSearch . '%');
             $aUrlParams['search'] = $sSearch;
         }

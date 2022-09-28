@@ -47,11 +47,14 @@
                 <figure class="px-1 pt-[1rem]">
                     <img class="rounded h-[200px] w-100" :src="product.image_path === null ? '/img/no-image.jpg' : product.image_path " alt="Shoes" />
                 </figure>
-                <div class="card-body justify-evenly">
+                <div  class="card-body justify-evenly">
                     <h2 class="card-title " v-text="product.name">Product Name </h2>
                     <h2 class="card-title flex-1 items-end" v-text="'$ ' + product.display_price"></h2>
-                    <div class="card-actions flex  flex-1 items-end mt-2 " :key="product.id">
+                    <div v-if="cartItem.indexOf(product.id.toString()) === -1" @click="addCartItem(product.id, $event)" class="card-actions flex  flex-1 items-end mt-2 " :key="product.id">
                         <button class="btn btn-primary flex-1 px-0" >Add To Cart</button>
+                    </div>
+                    <div v-else @click="removeCartItem(product.id, $event)" class="card-actions flex  flex-1 items-end mt-2 " :key="product.id">
+                        <button class="btn btn-error flex-1 px-0" >Remove To Cart</button>
                     </div>
                 </div>
             </div>
@@ -64,7 +67,7 @@
 <script>
 const PRODUCT_API = '/api/product';
 export default {
-    props: ['category', 'search'],
+    props: ['category', 'search', 'cartItem'],
     name: "ProductComponent",
     data() {
         return {
@@ -126,7 +129,29 @@ export default {
                 .catch(oError => {
 
                 });
-        }
+        },
+        addCartItem(id, event) {
+            let data = {
+                product: id,
+            };
+            axios.post('/cart/add', data)
+                .then(oResponse => {
+                    this.$emit('updateCart');
+                })
+                .catch(oError => {
+
+                });
+        },
+        removeCartItem(id, event) {
+            axios.delete('/cart', {params: {product: id}})
+                .then(oResponse => {
+                    this.cartItem.splice(this.cartItem.indexOf(id.toString()), 0);
+                    this.$emit('updateCart');
+                })
+                .catch(oError => {
+
+                });
+        },
 
     },
     beforeMount() {

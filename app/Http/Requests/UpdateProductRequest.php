@@ -31,7 +31,7 @@ class UpdateProductRequest extends FormRequest
             'name'        => 'string',
             'description' => 'string',
             'price'       => 'numeric',
-            'image_path'  => 'nullable',
+            'image_path'  => 'string',
         ];
     }
 

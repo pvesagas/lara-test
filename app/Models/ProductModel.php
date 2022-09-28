@@ -17,16 +17,32 @@ class ProductModel extends Model
         'category_no',
         'price',
         'name',
-        'description',
         'image_path'
     ];
 
     protected $appends = [
-        'display_price'
+        'display_price',
+        'category_name'
     ];
 
-    public function getDisplayPriceAttribute($value): string
+    protected $casts = [
+        'created_at' => 'date:Y-m-d H:i:s',
+        'updated_at' => 'date:Y-m-d H:i:s',
+    ];
+
+    /**
+     * @return string
+     */
+    public function getDisplayPriceAttribute(): string
     {
         return number_format($this->price, 2);
+    }
+
+    /**
+     * @return string
+     */
+    public function getCategoryNameAttribute(): string
+    {
+        return $this->hasOne(CategoryModel::class, 'id', 'category_no')->first()->category;
     }
 }

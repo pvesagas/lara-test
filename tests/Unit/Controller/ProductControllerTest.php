@@ -63,19 +63,16 @@ class ProductControllerTest extends TestCase
         $oProductModel->create([
             'category_no' => 1,
             'name'        => 'Product 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductModel->create([
             'category_no' => 2,
             'name'        => 'Product 2',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductModel->create([
             'category_no' => 2,
             'name'        => 'Item 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $sParams = http_build_query([
@@ -101,19 +98,16 @@ class ProductControllerTest extends TestCase
         $oProductModel->create([
             'category_no' => 1,
             'name'        => 'Product 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductModel->create([
             'category_no' => 2,
             'name'        => 'Product 2',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductModel->create([
             'category_no' => 2,
             'name'        => 'Item 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $sParams = http_build_query([
@@ -139,19 +133,16 @@ class ProductControllerTest extends TestCase
         $oProductModel->create([
             'category_no' => 1,
             'name'        => 'Product 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductModel->create([
             'category_no' => 2,
             'name'        => 'Product',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $oProductModel->create([
             'category_no' => 2,
             'name'        => 'Item 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $sParams = http_build_query([
@@ -197,7 +188,6 @@ class ProductControllerTest extends TestCase
         $oResult = $this->post($this->sProductApiUrl);
         $this->assertEquals(400, $oResult->getStatusCode());
         $this->assertArrayHasKey('name', $oResult->json('error'));
-        $this->assertArrayHasKey('description', $oResult->json('error'));
         $this->assertArrayHasKey('price', $oResult->json('error'));
         $this->assertArrayHasKey('category_no', $oResult->json('error'));
     }
@@ -209,7 +199,6 @@ class ProductControllerTest extends TestCase
         $oSeeder->call(ProductSeeder::class);
         $oResult = $this->post($this->sProductApiUrl, [
             'name'        => 'Product 1',
-            'description' => 'This is a description',
             'price'       => 10.15
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
@@ -225,7 +214,6 @@ class ProductControllerTest extends TestCase
         $oResult = $this->post($this->sProductApiUrl, [
             'category_no' => 1,
             'name'        => 'Product 1',
-            'description' => 'This is a description',
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
         $this->assertArrayHasKey('price', $oResult->json('error'));
@@ -240,26 +228,10 @@ class ProductControllerTest extends TestCase
         $oResult = $this->post($this->sProductApiUrl, [
             'category_no' => 1,
             'price'       => 10.15,
-            'description' => 'This is a description',
         ]);
         $this->assertEquals(400, $oResult->getStatusCode());
         $this->assertArrayHasKey('name', $oResult->json('error'));
         $this->assertCount(1, $oResult->json('error'));
-    }
-
-    public function test_controller_add_product_must_return_result_false_when_description_parameter_is_empty()
-    {
-        $oSeeder = new DatabaseSeeder();
-        $oSeeder->call(CategorySeeder::class);
-        $oSeeder->call(ProductSeeder::class);
-        $oResult = $this->post($this->sProductApiUrl, [
-            'category_no' => 1,
-            'price'       => 10.15,
-            'name'        => 'Product 1',
-        ]);
-        $this->assertEquals(400, $oResult->getStatusCode());
-        $this->assertArrayHasKey('description', $oResult->json('error'));
-        $this->assertNotEmpty($oResult->json('error'));
     }
 
     public function test_controller_add_product_must_return_result_true_when_product_added_to_database()
@@ -271,7 +243,6 @@ class ProductControllerTest extends TestCase
             'category_no' => 1,
             'price'       => 10.15,
             'name'        => 'Product 1',
-            'description' => 'This is a description',
         ]);
 
         $this->assertEquals(200, $oResult->getStatusCode());
@@ -327,19 +298,6 @@ class ProductControllerTest extends TestCase
         $this->assertCount(1, $oResult->json('error'));
     }
 
-    public function test_controller_update_product_must_return_result_false_when_description_parameter_is_invalid()
-    {
-        $oSeeder = new DatabaseSeeder();
-        $oSeeder->call(CategorySeeder::class);
-        $oSeeder->call(ProductSeeder::class);
-        $oResult = $this->put($this->sProductApiUrl . '/1', [
-            'description' => 1,
-        ]);
-        $this->assertEquals(400, $oResult->getStatusCode());
-        $this->assertArrayHasKey('description', $oResult->json('error'));
-        $this->assertNotEmpty($oResult->json('error'));
-    }
-
     public function test_controller_update_product_must_return_result_true_when_product_updated_in_database()
     {
         $oSeeder = new DatabaseSeeder();
@@ -347,11 +305,11 @@ class ProductControllerTest extends TestCase
         $oSeeder->call(ProductSeeder::class);
 
         $oResult = $this->put($this->sProductApiUrl . '/1', [
-            'description' => 'Update Description'
+            'name' => 'Update name'
         ]);
         $oResult->assertOk();
         $this->assertNotEmpty($oResult->json('data'));
-        $this->assertEquals('Update Description', $oResult->json('data')['description']);
+        $this->assertEquals('Update name', $oResult->json('data')['name']);
     }
 
 

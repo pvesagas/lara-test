@@ -30,9 +30,8 @@ class StoreProductRequest extends FormRequest
         return [
             'category_no' => 'required|numeric',
             'name'        => 'required|string',
-            'description' => 'required|string',
             'price'       => 'required|numeric',
-            'image_path'  => 'nullable',
+            'image_path'  => 'nullable|string',
         ];
     }
 

@@ -11,8 +11,8 @@
     </head>
     <body class="antialiased bg-gray-50 h-[100%]">
         <div id="app" class="bg-gray-50 ">
-            <store-container></store-container>
+            @yield('content')
         </div>
-        <script src="{{ asset('js/app.js') }}" defer></script>
+        <script src="{{ asset('js/app.js') }}"></script>
     </body>
 </html>

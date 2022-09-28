@@ -24,7 +24,6 @@ class ProductSeeder extends Seeder
                 [
                     'category_no' => rand(1, $iCategoryCount),
                     'name'        => 'Product ' . $iNumber,
-                    'description' => $faker->words(5, true),
                     'price'       => $faker->randomFloat(2, 100, 1)
                 ]
             ]);
