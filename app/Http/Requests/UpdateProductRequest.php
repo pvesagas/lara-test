@@ -29,7 +29,6 @@ class UpdateProductRequest extends FormRequest
         return [
             'category_no' => 'numeric',
             'name'        => 'string',
-            'description' => 'string',
             'price'       => 'numeric',
             'image_path'  => 'string',
         ];

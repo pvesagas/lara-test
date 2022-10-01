@@ -8,10 +8,10 @@
 
 # Routes [Front]
 ### Store
-- https://lara-test.local.com/
+- /
 
 ### Cart
-- https://lara-test.local.com/cart
+- /cart
 
 ### Product
-- https://lara-test.local.com/product
+- /product

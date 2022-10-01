@@ -9,7 +9,7 @@
 
             <div class="flex-1 justify-center p-5">
                 <!-- The button to open modal -->
-                <label for="my-modal-3" class="btn btn-success modal-button mb-2">Add product</label>
+                <label for="" class="btn btn-success modal-button mb-2" @click="openAddProduct">Add product</label>
                 <table class="w-full text-sm text-left text-gray-500 dark:text-gray-400">
                     <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                     <tr>
@@ -58,7 +58,7 @@
                     </tr>
                     </tbody>
                 </table>
-                <nav v-if="Object.keys(products).length > 15" aria-label="Page navigation example" class="mt-5">
+                <nav v-if="pagination.length > 0 && (pagination[pagination.length - 1].url !== null || pagination[0].url !== null)" aria-label="Page navigation example" class="mt-5">
                     <ul class="flex list-style-none">
                         <li v-for="links in pagination" class="page-item" :class="links.active === true ? 'active' : ''" :disabled="links.url === null">
                             <a v-if="links.active === false"
@@ -88,7 +88,7 @@
                 </div>
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
-                    <form @submit="submitForm">
+                    <form>
                         <div class="grid grid-cols-6 gap-6">
                             <div class="col-span-full">
                                 <label for="product-category" class="block mb-2 text-sm font-medium text-gray-900">Category</label>
@@ -146,7 +146,7 @@
                 </div>
                 <!-- Modal body -->
                 <div class="p-6 space-y-6">
-                    <form @submit="submitForm">
+                    <form>
                         <div class="grid grid-cols-6 gap-6">
                             <div class="col-span-full">
                                 <label for="product-category" class="block mb-2 text-sm font-medium text-gray-900">Category</label>
@@ -184,7 +184,7 @@
                     </form>
                 </div>
                 <!-- Modal footer -->
-                <div class="p-6 rounded-b border-t border-gray-200">
+                <div @click="editProduct()" class="p-6 rounded-b border-t border-gray-200">
                     <button class="btn btn-success" type="button">Edit product</button>
                 </div>
             </div>
@@ -212,18 +212,21 @@ export default {
             products: {},
             bProductLoading: true,
             bEmptyProduct: false,
-            pagination: {},
+            pagination: [],
             filename: '',
             file: '',
             success: '',
             src: '',
             addedProductName: '',
-            addedProductPrice: 0.00,
+            addedProductPrice: '',
             addedCategory: 0,
             editProductName: '',
             editProductPrice: 0.00,
             editCategory: 0,
-            editSrc: 0,
+            editSrc: null,
+            editProductId: 0,
+            editFile: '',
+            editFilename: '',
         }
     },
     methods: {
@@ -299,8 +302,14 @@ export default {
         },
         onFileChange(target) {
             let e = document.querySelector(target);
-            this.filename = "Selected File: " + e.files[0].name;
-            this.file = e.files[0];
+            if (target === '#fileUpload') {
+                this.filename = "Selected File: " + e.files[0].name;
+                this.file = e.files[0];
+            } else {
+                this.editFilename = "Selected File: " + e.files[0].name;
+                this.editFile = e.files[0];
+            }
+
             if (e.files && e.files[0]) {
                 let reader = new FileReader();
                 reader.onload = function (e) {
@@ -357,13 +366,74 @@ export default {
 
                 });
         },
+        editProduct() {
+            let data = {
+                name: this.editProductName,
+                price: this.editProductPrice,
+                category_no : this.editCategory
+            };
+
+            if (this.editFile) {
+                let formData = new FormData();
+                const config = {
+                    headers: {
+                        'content-type': 'multipart/form-data',
+                    }
+                }
+                formData.append('image', this.editFile);
+                axios.post('/imageUpload', formData, config)
+                    .then(oResponse => {
+                        data.image_path = oResponse.data.url;
+
+                        this.saveUpdate(data);
+                    })
+                    .catch(oError => {
+
+                    });
+            } else {
+                this.saveUpdate(data);
+            }
+
+        },
+        saveUpdate(data) {
+            axios.put('/api/product/' + this.editProductId, data)
+                .then(oResponse => {
+                    if (oResponse.data.result === true) {
+                        alert('Product updated');
+                    } else {
+                        alert('Failed to update product')
+                    }
+                    this.editFilename = '';
+                    this.editFile = '';
+                    this.editSrc = null;
+                    document.querySelector('#edit-modal').checked = false;
+                    this.fetchProducts();
+                })
+                .catch(oError => {
+
+                });
+        },
         openEditModal(index) {
+            document.getElementById('editImgPreview').src = '/img/no-image.jpg';
+            this.editFilename = '';
+            this.editFile = '';
+            this.editSrc = null;
             let product = this.products[index];
             this.editProductName = product.name;
             this.editProductPrice = product.price;
             this.editCategory = product.category_no;
             this.editSrc = product.image_path;
+            this.editProductId = product.id;
             document.querySelector('#edit-modal').checked = true;
+        },
+        openAddProduct() {
+            document.getElementById('addImgPreview').src = '/img/no-image.jpg';
+            this.filename = '';
+            this.file = '';
+            this.addedProductName = '';
+            this.addedProductPrice = '';
+            this.addedCategory = 0;
+            document.querySelector('#my-modal-3').checked = true;
         },
         deleteProduct(index) {
             let product = this.products[index];
